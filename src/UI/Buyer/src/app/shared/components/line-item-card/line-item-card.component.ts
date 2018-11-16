@@ -1,6 +1,6 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { LineItem, BuyerProduct } from '@ordercloud/angular-sdk';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'shared-line-item-card',
@@ -8,7 +8,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./line-item-card.component.scss'],
 })
 export class LineItemCardComponent {
-  closeIcon = faTimes;
+  removeIcon = faTrashAlt;
 
   @Input() lineitem: LineItem;
   @Input() productDetails: BuyerProduct;

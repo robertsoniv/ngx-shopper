@@ -36,3 +36,8 @@ html {
 [ng-reflect-router-link]:hover {
   cursor: pointer;
 }
+
+//use the primary theme color for font awesome counter layers (cart count)
+.fa-layers-counter {
+  background-color:$primary;
+}

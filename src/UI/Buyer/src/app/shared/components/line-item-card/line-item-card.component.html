@@ -1,32 +1,20 @@
-<div class="m-2 row align-items-center">
-  <div class="col-sm-7">
-    <div class="row align-items-sm-center">
-      <div class="col-3 p-0">
-        <img class="img-thumbnail"
-             appFallbackImage
-             [src]="lineitem.Product?.xp?.imageURLs[0] || 'http://placehold.it/300x300'">
-      </div>
-      <div class="col-9">
+<div class="row mb-3">
+  <div class="col-5 col-sm-4 col-md-3 col-xl-2">
+    <img class="img-thumbnail"
+         appFallbackImage
+         [src]="lineitem.Product?.xp?.imageURLs[0] || 'http://placehold.it/300x300'">
+  </div>
+  <div class="col pl-0">
+    <div class="row flex-column flex-md-row">
+      <div class="col-auto col-md-9">
         <h6>
           <a [routerLink]="['/products', lineitem.Product.ID]"
              class="link-text">{{lineitem.Product.Name}}</a>
-
-          <small class="text-muted d-block">{{lineitem.Product.ID}}</small>
         </h6>
-        <a class="text-danger btn btn-link px-0 delete-lineitem"
-           *ngIf="!readOnly"
-           (click)="deleteLineItem()">Remove Item</a>
+        <p class="small text-muted d-none d-sm-block">{{lineitem.Product.ID}}</p>
+        <p>{{lineitem.UnitPrice | currency}}</p>
       </div>
-    </div>
-  </div>
-  <div class="col-sm-5">
-    <div class="row align-items-center pt-3 pt-sm-0">
-      <div class="col-4 text-center">
-        <span class="d-block d-sm-none">Unit Price</span>
-        <span class="text-nowrap">{{lineitem.UnitPrice | currency}}</span>
-      </div>
-      <div class="col-4 text-center">
-        <span class="d-block d-sm-none">Qty</span>
+      <div class="col-auto col-md-3">
         <shared-quantity-input *ngIf="!readOnly"
                                [product]="productDetails"
                                [existingQty]="lineitem.Quantity"
@@ -34,13 +22,14 @@
         <span class="text-nowrap"
               *ngIf="readOnly">&times;{{ lineitem.Quantity | number }}</span>
       </div>
-      <div class="col-4 text-right">
-        <span class="d-block d-sm-none">Total</span>
-        <span class="text-nowrap">{{ lineitem.LineTotal | currency }}</span>
-      </div>
     </div>
   </div>
+  <div class="col-auto"
+       *ngIf="!readOnly">
+    <a class="text-danger btn btn-link px-0 delete-lineitem"
+       (click)="deleteLineItem()">
+      <fa-icon [icon]="removeIcon"
+               class="d-inline d-sm-none"></fa-icon><span class="d-none d-sm-inline">Remove</span>
+    </a>
+  </div>
 </div>
-
-<!-- hr only visible on mobile to more clearly distinguish between line items -->
-<hr class="pb-4 d-block d-sm-none">

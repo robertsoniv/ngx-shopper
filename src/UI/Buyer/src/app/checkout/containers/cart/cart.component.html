@@ -1,34 +1,36 @@
-<shared-page-title title="Shopping Cart"></shared-page-title>
-<div class="container">
+<div class="container my-4">
   <div *ngIf="(currentOrder$ | async) as order">
-    <div class="my-3 d-flex justify-content-between">
-      <button class="btn btn-outline-dark"
-              [routerLink]="['/products']">Continue Shopping</button>
-      <button class="btn btn-outline-danger"
-              *ngIf="order.LineItemCount"
-              (click)="cancelOrder()">Cancel Order</button>
-    </div>
     <div class="card bg-light p-3 flex-row justify-content-center"
          *ngIf="!order.LineItemCount">
       <p class="mb-0">You do not have any items in your cart</p>
     </div>
-    <div class="row flex-lg-row-reverse"
+    <div class="row"
          *ngIf="order.LineItemCount">
-      <div class="col-lg-4">
-        <checkout-order-summary [order]="order"></checkout-order-summary>
-        <button class="btn btn-primary btn-block mb-4 font-weight-bold"
-                routerLink="/checkout">CHECKOUT</button>
-      </div>
       <div class="col-lg-8"
            *ngIf="productsSet">
-        <shared-lineitem-list-wrapper>
-          <shared-line-item-card *ngFor="let li of lineItems.Items"
-                                 [lineitem]="li"
+        <button class="btn btn-link btn-sm pr-0 text-danger float-right"
+                *ngIf="order.LineItemCount"
+                aria-label="Clear your cart"
+                (click)="cancelOrder()">Remove All</button>
+        <h5>{{lineItems.Items.length}} Items in Your Cart</h5>
+        <hr>
+        <div *ngFor="let li of lineItems.Items">
+          <shared-line-item-card [lineitem]="li"
                                  [readOnly]="false"
                                  [productDetails]="getProduct(li)"
                                  (deletedLineItem)="deleteLineItem($event)"
                                  (lineItemUpdated)="updateLineItem($event)"></shared-line-item-card>
-        </shared-lineitem-list-wrapper>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <hr class="d-lg-none">
+        <h5 class="text-right"><span class="float-lg-left mr-3 mr-lg-0">Subtotal</span><span class="font-weight-light">{{order.Subtotal | currency}}</span></h5>
+        <hr>
+        <button class="btn btn-primary btn-block font-weight-bold"
+                routerLink="/checkout">CHECKOUT</button>
+        <hr>
+        <a class="d-block text-center"
+           [routerLink]="['/products']">Continue Shopping</a>
       </div>
     </div>
   </div>
