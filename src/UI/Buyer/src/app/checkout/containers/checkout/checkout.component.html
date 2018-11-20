@@ -36,17 +36,15 @@
           <ngb-tab id="shippingAddress"
                    title="Shipping">
             <ng-template ngbTabContent>
-              <checkout-address [isAnon]="isAnon"
-                                addressType="Shipping"
-                                (continue)="toSection('billingAddress')"></checkout-address>
+              <checkout-shipping [isAnon]="isAnon"
+                                 (continue)="toSection('billingAddress')"></checkout-shipping>
             </ng-template>
           </ngb-tab>
           <ngb-tab id="billingAddress"
                    title="Billing">
             <ng-template ngbTabContent>
-              <checkout-address [isAnon]="isAnon"
-                                addressType="Billing"
-                                (continue)="toSection('payment')"></checkout-address>
+              <checkout-billing [isAnon]="isAnon"
+                                (continue)="toSection('payment')"></checkout-billing>
             </ng-template>
           </ngb-tab>
           <ngb-tab id="payment"
