@@ -1,0 +1,24 @@
+<button class="btn btn-secondary mb-3"
+        (click)="modalService.open(modalID)"
+        *ngIf="!isAnon && existingAddresses && existingAddresses.Items.length > 0">Select a saved address</button>
+<button class="btn btn-secondary mb-3 ml-2"
+        (click)="useShippingAsBilling()">Use Shipping Address</button>
+<shared-address-form [existingAddress]="selectedAddress"
+                     (formSubmitted)="saveAddress($event.address, $event.formDirty)"
+                     btnText="Save and Continue"></shared-address-form>
+<shared-modal id="{{ modalID }}"
+              modalTitle="Select Address">
+  <shared-generic-browse [items]="existingAddresses?.Items"
+                         [meta]="existingAddresses?.Meta"
+                         searchPlaceholder="addresses"
+                         (requestOptionsUpdated)="updateRequestOptions($event)">
+    <ng-template let-address="item">
+      <shared-address-display [address]="address">
+        <div actions>
+          <a href="javascript:void(0)"
+             (click)="existingAddressSelected(address)">Select</a>
+        </div>
+      </shared-address-display>
+    </ng-template>
+  </shared-generic-browse>
+</shared-modal>

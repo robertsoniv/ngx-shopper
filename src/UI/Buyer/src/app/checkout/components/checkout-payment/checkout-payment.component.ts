@@ -1,5 +1,11 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { CheckoutSectionBaseComponent } from '@app-buyer/checkout/components/checkout-section-base/checkout-section-base.component';
+import {
+  Component,
+  OnInit,
+  Input,
+  Inject,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {
   OcPaymentService,
   Payment,
@@ -20,18 +26,16 @@ import { forkJoin, Observable, of } from 'rxjs';
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.scss'],
 })
-export class CheckoutPaymentComponent extends CheckoutSectionBaseComponent
-  implements OnInit {
+export class CheckoutPaymentComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private appStateService: AppStateService,
     private ocPaymentService: OcPaymentService,
     @Inject(applicationConfiguration) private appConfig: AppConfig
-  ) {
-    super();
-  }
+  ) {}
 
   @Input() isAnon: boolean;
+  @Output() continue = new EventEmitter();
   readonly order = this.appStateService.orderSubject.value;
   form: FormGroup;
   availablePaymentMethods = this.appConfig.availablePaymentMethods;

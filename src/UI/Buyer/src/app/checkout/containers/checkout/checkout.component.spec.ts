@@ -2,11 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CheckoutComponent } from '@app-buyer/checkout/containers/checkout/checkout.component';
 import { AppStateService, BaseResolveService } from '@app-buyer/shared';
-import {
-  NgbAccordion,
-  NgbPanel,
-  NgbAccordionConfig,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbTabsetModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, BehaviorSubject } from 'rxjs';
@@ -42,10 +38,9 @@ describe('CheckoutComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CheckoutComponent, NgbAccordion, NgbPanel],
-      imports: [FontAwesomeModule, ReactiveFormsModule],
+      declarations: [CheckoutComponent],
+      imports: [FontAwesomeModule, ReactiveFormsModule, NgbTabsetModule],
       providers: [
-        NgbAccordionConfig,
         { provide: AppErrorHandler, useValue: appErrorHandler },
         { provide: Router, useValue: router },
         { provide: AppStateService, useValue: appStateService },

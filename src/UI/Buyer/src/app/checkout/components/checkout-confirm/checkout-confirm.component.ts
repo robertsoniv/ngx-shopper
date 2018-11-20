@@ -1,5 +1,11 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
-import { CheckoutSectionBaseComponent } from '@app-buyer/checkout/components/checkout-section-base/checkout-section-base.component';
+import {
+  Component,
+  OnInit,
+  Inject,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { AppStateService, AppLineItemService } from '@app-buyer/shared';
 import {
   Order,
@@ -20,13 +26,13 @@ import {
   templateUrl: './checkout-confirm.component.html',
   styleUrls: ['./checkout-confirm.component.scss'],
 })
-export class CheckoutConfirmComponent extends CheckoutSectionBaseComponent
-  implements OnInit {
+export class CheckoutConfirmComponent implements OnInit {
   form: FormGroup;
   order: Order;
   payments$: Observable<ListPayment>;
   lineItems$: Observable<ListLineItem>;
   @Input() isSubmittingOrder: boolean;
+  @Output() continue = new EventEmitter();
 
   constructor(
     private appStateService: AppStateService,
@@ -35,9 +41,7 @@ export class CheckoutConfirmComponent extends CheckoutSectionBaseComponent
     private formBuilder: FormBuilder,
     private ocOrderService: OcOrderService,
     @Inject(applicationConfiguration) private appConfig: AppConfig
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit() {
     if (!this.appConfig.anonymousShoppingEnabled) {

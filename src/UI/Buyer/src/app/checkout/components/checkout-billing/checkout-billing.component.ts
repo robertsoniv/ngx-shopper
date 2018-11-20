@@ -1,5 +1,11 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { CheckoutSectionBaseComponent } from '@app-buyer/checkout/components/checkout-section-base/checkout-section-base.component';
+import {
+  Output,
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  EventEmitter,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   OcMeService,
@@ -16,15 +22,14 @@ import { ToastrService } from 'ngx-toastr';
 import { AddressFormComponent } from '@app-buyer/shared/components/address-form/address-form.component';
 
 @Component({
-  selector: 'checkout-address',
-  templateUrl: './checkout-address.component.html',
-  styleUrls: ['./checkout-address.component.scss'],
+  selector: 'checkout-billing',
+  templateUrl: './checkout-billing.component.html',
+  styleUrls: ['./checkout-billing.component.scss'],
 })
-export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
-  implements OnInit {
+export class CheckoutBillingComponent implements OnInit {
   @Input() isAnon: boolean;
-  @Input() addressType: 'Shipping' | 'Billing';
   @ViewChild(AddressFormComponent) addressFormComponent: AddressFormComponent;
+  @Output() continue = new EventEmitter();
   existingAddresses: ListBuyerAddress;
   selectedAddress: BuyerAddress;
   order: Order;
@@ -43,17 +48,14 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
     private appStateService: AppStateService,
     private modalService: ModalService,
     private toastrService: ToastrService
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit() {
-    this.modalID = `checkout-select-address-${this.addressType}`;
+    this.modalID = `checkout-select-address-billing`;
     this.clearFiltersOnModalClose();
     if (!this.isAnon) {
       this.getSavedAddresses();
     }
-
     this.setSelectedAddress();
   }
 
@@ -71,11 +73,9 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
   }
 
   private getSavedAddresses() {
-    const filters = {};
-    filters[this.addressType] = true;
     this.ocMeService
       .ListAddresses({
-        filters,
+        filters: { Billing: 'true' },
         ...this.requestOptions,
         pageSize: this.resultsPerPage,
       })
@@ -85,11 +85,7 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
   private setSelectedAddress() {
     this.order = this.appStateService.orderSubject.value;
     this.lineItems = this.appStateService.lineItemSubject.value;
-
-    this.selectedAddress =
-      this.addressType === 'Billing'
-        ? this.order.BillingAddress
-        : this.lineItems.Items[0].ShippingAddress; // shipping address is defined at the line item level
+    this.selectedAddress = this.order.BillingAddress;
   }
 
   existingAddressSelected(address: BuyerAddress) {
@@ -98,10 +94,6 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
   }
 
   useShippingAsBilling() {
-    if (this.addressType === 'Shipping') {
-      return;
-    }
-
     this.usingShippingAsBilling = true;
     this.selectedAddress = this.lineItems.Items[0].ShippingAddress;
   }
@@ -118,10 +110,6 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
     }
     request.subscribe(
       (order) => {
-        if (this.addressType === 'Shipping') {
-          this.lineItems.Items[0].ShippingAddress = address;
-          this.appStateService.lineItemSubject.next(this.lineItems);
-        }
         this.order = order;
         this.appStateService.orderSubject.next(this.order);
         this.continue.emit();
@@ -140,7 +128,7 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
     // If a saved address (with an ID) is changed by the user it is attached to an order as a one time address.
     // However, order.ShippingAddressID (or BillingAddressID) still points to the unmodified address. The ID should be cleared.
     address.ID = null;
-    return this.ocOrderService[`Set${this.addressType}Address`](
+    return this.ocOrderService.SetBillingAddress(
       'outgoing',
       this.order.ID,
       address
@@ -148,9 +136,9 @@ export class CheckoutAddressComponent extends CheckoutSectionBaseComponent
   }
 
   private setSavedAddress(address): Observable<Order> {
-    const addressKey = `${this.addressType}AddressID`;
-    const partialOrder = {};
-    partialOrder[addressKey] = address.ID;
+    const partialOrder = {
+      BillingAddressID: address.ID,
+    };
     return this.ocOrderService.Patch('outgoing', this.order.ID, partialOrder);
   }
 }

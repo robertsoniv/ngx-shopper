@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrderSummaryComponent } from '@app-buyer/checkout/components/order-summary/order-summary.component';
 import { CurrencyPipe } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('OrderSummaryComponent', () => {
   const currencyPipe = new CurrencyPipe('en-US');
@@ -18,6 +19,7 @@ describe('OrderSummaryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [OrderSummaryComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
@@ -82,10 +84,10 @@ describe('OrderSummaryComponent', () => {
     fixture.detectChanges();
 
     let el = fixture.nativeElement.querySelector('.tax-cost');
-    expect(clean(el.textContent)).toEqual('Calculated during checkout');
+    expect(clean(el.textContent)).toEqual('-');
 
     el = fixture.nativeElement.querySelector('.shipping-cost');
-    expect(clean(el.textContent)).toEqual('Calculated during checkout');
+    expect(clean(el.textContent)).toEqual('-');
   });
 
   it('should display free for zero shipping', () => {
