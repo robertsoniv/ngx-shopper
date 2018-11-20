@@ -1,7 +1,7 @@
 <!-- TOP NAV -->
 <nav class="navbar navbar-expand navbar-light bg-white"
      *ngIf="showHeader()">
-  <div class="container">
+  <div class="container pl-sm-3">
 
     <a class="navbar-brand"
        routerLink="/home">
@@ -77,7 +77,7 @@
 </nav>
 <nav class="navbar navbar-expand navbar-light bg-light"
      *ngIf="showHeader()">
-  <div class="container">
+  <div class="container pl-sm-3">
     <shared-search class="mr-3 w-100"
                    placeholderText="Search Products..."
                    (searched)="searchProducts($event)"></shared-search>

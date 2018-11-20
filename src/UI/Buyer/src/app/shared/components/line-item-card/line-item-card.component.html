@@ -1,30 +1,35 @@
 <div class="row mb-3">
-  <div class="col-5 col-sm-4 col-md-3 col-xl-2">
+  <div class="col-4 col-md-3">
     <img class="img-thumbnail"
          appFallbackImage
          [src]="lineitem.Product?.xp?.imageURLs[0] || 'http://placehold.it/300x300'">
+    <span class="badge badge-pill badge-secondary"
+          *ngIf="readOnly">{{ lineitem.Quantity | number }}</span>
   </div>
   <div class="col pl-0">
-    <div class="row flex-column flex-md-row">
-      <div class="col-auto col-md-9">
+    <div class="row flex-md-row"
+         [ngClass]="{'flex-column': !readOnly}">
+      <div [ngClass]="readOnly ? 'col' : 'col-auto col-md'">
         <h6>
           <a [routerLink]="['/products', lineitem.Product.ID]"
              class="link-text">{{lineitem.Product.Name}}</a>
         </h6>
-        <p class="small text-muted d-none d-sm-block">{{lineitem.Product.ID}}</p>
-        <p>{{lineitem.UnitPrice | currency}}</p>
+        <div *ngIf="!readOnly">
+          <p class="small text-muted d-none d-sm-block">{{lineitem.Product.ID}}</p>
+          <p>{{lineitem.UnitPrice | currency}}</p>
+        </div>
       </div>
-      <div class="col-auto col-md-3">
+      <div class="col-auto col-md flex-md-shrink-1 flex-md-grow-0">
         <shared-quantity-input *ngIf="!readOnly"
                                [product]="productDetails"
                                [existingQty]="lineitem.Quantity"
                                (qtyChanged)="updateQuantity($event)"></shared-quantity-input>
-        <span class="text-nowrap"
-              *ngIf="readOnly">&times;{{ lineitem.Quantity | number }}</span>
+        <p *ngIf="readOnly"
+           class="text-right">{{lineitem.LineTotal | currency}}</p>
       </div>
     </div>
   </div>
-  <div class="col-auto"
+  <div class="flex-shrink-1 col-auto pl-0"
        *ngIf="!readOnly">
     <a class="text-danger btn btn-link px-0 delete-lineitem"
        (click)="deleteLineItem()">

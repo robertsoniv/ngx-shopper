@@ -1,25 +1,22 @@
-<shared-page-title title="Checkout"></shared-page-title>
-<div class="container">
+<div class="container my-4">
   <div *ngIf="currentOrder$ | async; let order">
     <div class="row flex-lg-row-reverse"
          *ngIf="order.LineItemCount">
-      <div class="col-lg-3">
-        <checkout-order-summary [order]="order"></checkout-order-summary>
+      <div class="col-lg-4"
+           *ngIf="lineItems$ | async; let lineItems">
+        <checkout-order-summary [order]="order"
+                                [lineItems]="lineItems.Items"></checkout-order-summary>
       </div>
-      <div class="col-lg-9">
-        <ngb-accordion [closeOthers]="true"
-                       (panelChange)="beforeChange($event)"
-                       #acc="ngbAccordion"
-                       [activeIds]="currentPanel">
-          <ngb-panel *ngIf="isAnon"
-                     id="login">
-            <ng-template ngbPanelTitle>
-              <a class="link-text"> Login </a>
-              <fa-icon class="float-right text-success"
-                       *ngIf="getValidation('login')"
-                       [icon]="faCheck"></fa-icon>
-            </ng-template>
-            <ng-template ngbPanelContent>
+      <div class="col-lg-8">
+        <ngb-tabset (tabChange)="beforeChange($event)"
+                    type="steps"
+                    #tabs="ngbTabset"
+                    justify="justified"
+                    [activeId]="currentPanel">
+          <ngb-tab *ngIf="isAnon"
+                   id="login"
+                   title="Login">
+            <ng-template ngbTabContent>
               <div class="row">
                 <div class="col-4">
                   <button class="btn btn-block btn-primary"
@@ -35,55 +32,39 @@
                 </div>
               </div>
             </ng-template>
-          </ngb-panel>
-          <ngb-panel id="shippingAddress">
-            <ng-template ngbPanelTitle>
-              <a class="link-text"> Shipping Address </a>
-              <fa-icon class="float-right text-success"
-                       *ngIf="getValidation('shippingAddress')"
-                       [icon]="faCheck"></fa-icon>
-            </ng-template>
-            <ng-template ngbPanelContent>
+          </ngb-tab>
+          <ngb-tab id="shippingAddress"
+                   title="Shipping">
+            <ng-template ngbTabContent>
               <checkout-address [isAnon]="isAnon"
                                 addressType="Shipping"
                                 (continue)="toSection('billingAddress')"></checkout-address>
             </ng-template>
-          </ngb-panel>
-          <ngb-panel id="billingAddress">
-            <ng-template ngbPanelTitle>
-              <a class="link-text"> Billing Address </a>
-              <fa-icon class="float-right text-success"
-                       *ngIf="getValidation('billingAddress')"
-                       [icon]="faCheck"></fa-icon>
-            </ng-template>
-            <ng-template ngbPanelContent>
+          </ngb-tab>
+          <ngb-tab id="billingAddress"
+                   [disabled]="!getValidation('shippingAddress')"
+                   title="Billing">
+            <ng-template ngbTabContent>
               <checkout-address [isAnon]="isAnon"
                                 addressType="Billing"
                                 (continue)="toSection('payment')"></checkout-address>
             </ng-template>
-          </ngb-panel>
-          <ngb-panel id="payment">
-            <ng-template ngbPanelTitle>
-              <a class="link-text"> Payment </a>
-              <fa-icon class="float-right text-success"
-                       *ngIf="getValidation('payment')"
-                       [icon]="faCheck"></fa-icon>
-            </ng-template>
-            <ng-template ngbPanelContent>
+          </ngb-tab>
+          <ngb-tab id="payment"
+                   title="Payment">
+            <ng-template ngbTabContent>
               <checkout-payment [isAnon]="isAnon"
                                 (continue)="toSection('confirm')"></checkout-payment>
             </ng-template>
-          </ngb-panel>
-          <ngb-panel id="confirm">
-            <ng-template ngbPanelTitle>
-              <a class="link-text"> Confirm </a>
-            </ng-template>
-            <ng-template ngbPanelContent>
+          </ngb-tab>
+          <ngb-tab id="confirm"
+                   title="Confirm">
+            <ng-template ngbTabContent>
               <checkout-confirm (continue)="submitOrder()"
                                 [isSubmittingOrder]="isSubmittingOrder"></checkout-confirm>
             </ng-template>
-          </ngb-panel>
-        </ngb-accordion>
+          </ngb-tab>
+        </ngb-tabset>
       </div>
     </div>
   </div>

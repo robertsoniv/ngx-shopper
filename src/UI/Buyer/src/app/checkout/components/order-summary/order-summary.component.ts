@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Order } from '@ordercloud/angular-sdk';
+import { Order, LineItem } from '@ordercloud/angular-sdk';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -9,12 +9,13 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class OrderSummaryComponent {
   @Input() order: Order;
+  @Input() lineItems: LineItem[];
 
   constructor() {}
 
   display(field) {
     if (!(this.order.xp && this.order.xp.AddOnsCalculated)) {
-      return 'Calculated during checkout';
+      return '-';
     }
 
     if (this.order[`${field}`] === 0) {

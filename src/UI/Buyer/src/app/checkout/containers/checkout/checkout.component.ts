@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { Order, OcOrderService } from '@ordercloud/angular-sdk';
+import { Order, OcOrderService, ListLineItem } from '@ordercloud/angular-sdk';
 import { AppStateService, BaseResolveService } from '@app-buyer/shared';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { NgbAccordion } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { AppErrorHandler } from '@app-buyer/config/error-handling.config';
 import { flatMap } from 'rxjs/operators';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'checkout-checkout',
@@ -14,8 +15,9 @@ import { flatMap } from 'rxjs/operators';
   styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit {
-  @ViewChild('acc') public accordian: NgbAccordion;
+  @ViewChild('tabs') public tabs: NgbTabset;
   currentOrder$: Observable<Order> = this.appStateService.orderSubject;
+  lineItems$: Observable<ListLineItem> = this.appStateService.lineItemSubject;
   isAnon: boolean;
   isSubmittingOrder = false;
   currentPanel: string;
@@ -63,16 +65,19 @@ export class CheckoutComponent implements OnInit {
 
   setValidation(id: string, value: boolean) {
     this.sections.find((x) => x.id === id).valid = value;
+    const tabElement = document.getElementById(id);
+    if (tabElement) tabElement.classList.toggle('complete', value);
   }
 
   toSection(id: string) {
+    console.log(this.tabs);
     const prevIdx = Math.max(
       this.sections.findIndex((x) => x.id === id) - 1,
       0
     );
     const prev = this.sections[prevIdx].id;
     this.setValidation(prev, true);
-    this.accordian.toggle(id);
+    this.tabs.select(id);
   }
 
   submitOrder() {
@@ -102,13 +107,13 @@ export class CheckoutComponent implements OnInit {
   }
 
   beforeChange($event) {
-    if (this.currentPanel === $event.panelId) {
+    if (this.currentPanel === $event.nextId) {
       return $event.preventDefault();
     }
 
     // Only allow a section to open if all previous sections are valid
     for (const section of this.sections) {
-      if (section.id === $event.panelId) {
+      if (section.id === $event.nextId) {
         break;
       }
 
@@ -116,6 +121,6 @@ export class CheckoutComponent implements OnInit {
         return $event.preventDefault();
       }
     }
-    this.currentPanel = $event.panelId;
+    this.currentPanel = $event.nextId;
   }
 }
