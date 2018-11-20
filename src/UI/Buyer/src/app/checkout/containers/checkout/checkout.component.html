@@ -42,7 +42,6 @@
             </ng-template>
           </ngb-tab>
           <ngb-tab id="billingAddress"
-                   [disabled]="!getValidation('shippingAddress')"
                    title="Billing">
             <ng-template ngbTabContent>
               <checkout-address [isAnon]="isAnon"

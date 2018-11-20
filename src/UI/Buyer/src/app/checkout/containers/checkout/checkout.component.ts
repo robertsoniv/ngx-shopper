@@ -7,7 +7,6 @@ import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { AppErrorHandler } from '@app-buyer/config/error-handling.config';
 import { flatMap } from 'rxjs/operators';
-import { $ } from 'protractor';
 
 @Component({
   selector: 'checkout-checkout',
