@@ -47,7 +47,7 @@ export class ProductTableComponent extends BaseBrowse implements OnInit {
   }
 
   ngOnInit() {
-    this.catalogID = this.appConfig.buyerID;
+    this.catalogID = this.appConfig.catalogID;
     this.loadData();
   }
 

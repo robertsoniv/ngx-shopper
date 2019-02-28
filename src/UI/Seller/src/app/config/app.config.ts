@@ -6,10 +6,11 @@ export const applicationConfiguration = new InjectionToken<AppConfig>(
 );
 
 export const ocAppConfig: AppConfig = {
-  appname: 'OrderCloud Admin',
+  appname: environment.appname,
   clientID: environment.clientID,
   middlewareUrl: environment.middlewareUrl,
   buyerID: environment.buyerID,
+  catalogID: environment.catalogID,
   buyerClientID: environment.buyerClientID,
   buyerUrl: environment.buyerUrl,
   scope: [
@@ -60,6 +61,11 @@ export interface AppConfig {
    * The client ID of the buyer org.
    */
   buyerClientID: string;
+
+  /**
+   * The default catalog ID of the buyer org.
+   */
+  catalogID: string;
 
   /**
    * base path to buyer site

@@ -57,7 +57,7 @@ export class CategoryTableComponent implements OnInit {
 
   ngOnInit() {
     // The default for a new OC buyer organization is one Catalog with ID equal to the buyerID
-    this.catalogID = this.appConfig.buyerID;
+    this.catalogID = this.appConfig.catalogID;
     this.loadCategories();
   }
 

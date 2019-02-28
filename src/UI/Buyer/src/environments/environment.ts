@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
-  clientID: '73FDFC1E-6FD5-4AFA-8751-C42C5CF47B57',
+  appname: 'Walter Hammond',
+  clientID: 'A417E52C-1EA7-4452-8E59-42423FA71C78',
   middlewareUrl: 'my-middleware-url.com/api',
 };

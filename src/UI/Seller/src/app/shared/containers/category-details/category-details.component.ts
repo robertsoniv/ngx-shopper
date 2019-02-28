@@ -29,7 +29,7 @@ export class CategoryDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.catalogID = this.appConfig.buyerID;
+    this.catalogID = this.appConfig.catalogID;
     this.getCategoryData().subscribe((x) => (this.category = x));
   }
 
